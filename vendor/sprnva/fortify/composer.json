@@ -1,0 +1,18 @@
+{
+    "name": "sprnva/fortify",
+    "description": "The Authentication Scaffolding for Sprnva Framework.",
+    "keywords": [
+        "framework",
+        "sprnva",
+        "auth"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Judywen Guapin",
+            "email": "jguapin21@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

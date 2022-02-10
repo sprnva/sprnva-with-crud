@@ -1,0 +1,24 @@
+{
+    "name": "sprnva/framework",
+    "description": "The Sprnva Framework.",
+    "keywords": [
+        "framework",
+        "sprnva"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Judywen Guapin",
+            "email": "jguapin21@gmail.com"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "src/Helpers.php",
+            "src/bootstrap.php",
+            "src/Routes.php"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

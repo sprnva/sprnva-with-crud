@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * Always remember:
+ * "up" is for run migration
+ * "down" is for the rollback, reverse the migration
+ * 
+ */
+${{ varName }} = [
+	"mode" => "",
+	"table"	=> "",
+	"primary_key" => "",
+	"up" => [
+		"" => ""
+	],
+	"down" => [
+		"" => ""
+	]
+];
