@@ -58,7 +58,11 @@ class RouteBinding
             }
         }
 
-        throw new RoutingException("No route defined for [{$uri}]", new Exception());
+        if (App::get('config')['app']['environment'] != "development") {
+            abort(404, 'NOT FOUND');
+        } else {
+            throw new RoutingException("No route defined for [{$uri}]", new Exception());
+        }
     }
 
     /**
