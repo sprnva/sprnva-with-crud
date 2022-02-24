@@ -4,6 +4,7 @@ namespace App\Core\Routing;
 
 use App\Core\Auth;
 use Exception;
+use App\Core\App;
 use App\Core\Routing\Exception\RoutingException;
 
 class RouteBinding
