@@ -2,6 +2,7 @@
 
 use App\Core\App;
 use App\Core\Auth;
+use App\Core\Storage;
 ?>
 <html lang="en">
 
@@ -37,6 +38,21 @@ use App\Core\Auth;
 			box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
 			margin-bottom: 1rem;
 			border-radius: .5rem !important;
+		}
+
+		.table td,
+		.table th {
+			padding: 0.45rem;
+		}
+
+		.table th {
+			background-color: #eaecf0;
+		}
+
+		.table tr,
+		.table th,
+		.table td {
+			border: 1px solid #a2a9b1;
 		}
 	</style>
 
@@ -80,6 +96,7 @@ use App\Core\Auth;
 				<ul class="navbar-nav flex-row ml-md-auto">
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<img src="<?= Storage::getAvatar(Auth::user('id')); ?>" alt="sprnva-logo" style="width: 30px; height: 30px;object-fit: cover;border-radius: 50%;">
 							<?= Auth::user('fullname') ?>
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">

@@ -129,7 +129,14 @@ class QueryBuilder implements QueryBuilderInterface
 	 */
 	public function with($params = [])
 	{
-		$currentTableDatas = $this->result;
+		// $currentTableDatas = $this->result;
+		if (!empty($this->result)) {
+			$currentTableDatas = $this->result;
+		} else {
+			$currentTableDatas = ($this->queryStatement != "")
+				? DB()->query($this->queryStatement, 'Y')->get()
+				: '';
+		}
 
 		$collectedIdFrom = [];
 		foreach ($params as $relationTable => $param) {
@@ -158,6 +165,7 @@ class QueryBuilder implements QueryBuilderInterface
 			$this->listen[] = "SELECT * FROM `{$relationTable}` WHERE `{$relationTable}`.`$relationPrimaryColumn` IN('$implodedIds') {$andFilter}";
 			$relationDatas[$relationTable] = $statement->fetchAll(PDO::FETCH_ASSOC);
 		}
+
 
 		$newResultSet = [];
 		foreach ($currentTableDatas as $currentTableData) {
@@ -191,6 +199,8 @@ class QueryBuilder implements QueryBuilderInterface
 			}
 		}
 
+
+		$this->querytype = "";
 		$this->result = $newResultSet;
 		return $this;
 	}
@@ -201,7 +211,13 @@ class QueryBuilder implements QueryBuilderInterface
 	 */
 	public function withCount($params = [])
 	{
-		$currentTableDatas = $this->result;
+		if (!empty($this->result)) {
+			$currentTableDatas = $this->result;
+		} else {
+			$currentTableDatas = ($this->queryStatement != "")
+				? DB()->query($this->queryStatement, 'Y')->get()
+				: '';
+		}
 
 		$collectedIdFrom = [];
 		foreach ($params as $relationTable => $param) {
@@ -245,6 +261,7 @@ class QueryBuilder implements QueryBuilderInterface
 			$newResultSet[] = $currentTableData;
 		}
 
+		$this->querytype = "";
 		$this->result = $newResultSet;
 		return $this;
 	}
@@ -437,6 +454,10 @@ class QueryBuilder implements QueryBuilderInterface
 		return "Success seed! Page generated in {$time_taken} seconds using {$memoryUsage}MB.";
 	}
 
+	/**
+	 * paginate the query against the db
+	 *
+	 */
 	public function paginate($per_page = '10')
 	{
 		$this->querytype = "";
@@ -479,7 +500,7 @@ class QueryBuilder implements QueryBuilderInterface
 
 		$links = "";
 		$links .= '<nav aria-label="Page navigation example mt-5">';
-		$links .= '<ul class="pagination justify-content-center">';
+		$links .= '<ul class="pagination pagination-sm justify-content-center">';
 		$links .= '<li class="page-item ' . $disabledPrev . '">';
 		$links .= '<a class="page-link" href="' . "?page=" . $prev . '">Previous</a>';
 		$links .= '</li>';

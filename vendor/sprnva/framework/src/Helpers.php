@@ -7,6 +7,7 @@ $_SERVER['EXCEPTION'] = 0;
 
 use App\Core\App;
 use App\Core\BcryptHasher;
+use App\Core\Blast;
 use App\Core\Request;
 use App\Core\Error;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -14,7 +15,7 @@ use PHPMailer\PHPMailer\SMTP;
 use App\Core\Dumper;
 use PHPMailer\PHPMailer\Exception;
 
-require __DIR__  . '/Kernel/ErrorKernel.php';
+Blast::listen();
 
 Request::csrf_token();
 
@@ -25,7 +26,7 @@ Request::csrf_token();
  */
 function appversion()
 {
-    return "1.3.35";
+    return "1.4.10";
 }
 
 /**
@@ -121,13 +122,16 @@ function route($route, $data = "")
  * @param string $data
  * @param bool $trim
  */
-function sanitizeString($data, $trim = true)
+function sanitizeString($data, $stripslashes = true, $trim = true)
 {
     if ($trim) {
         $data = trim($data);
     }
 
-    $data = stripslashes($data);
+    if ($stripslashes) {
+        $data = stripslashes($data);
+    }
+
     $data = htmlspecialchars($data);
 
     return $data;
@@ -355,36 +359,9 @@ if (!function_exists('abort')) {
     {
         $data = ($message == "") ? error_page($code) : $message;
 
-        echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>' . $code . ' | ' . $data . '</title><style>
-                body {
-                    height: 100%;
-                    background: #fff;
-                    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                    color: #4e7d50;
-                    font-weight: 300;
-                }
-        
-                h1 {
-                    font-weight: lighter;
-                    letter-spacing: 0.8;
-                    font-size: 2.3rem;
-                    margin-top: 0;
-                    margin-bottom: 0;
-                    color: #4e7d50;
-                }
-        
-                .wrap {
-                    margin-top: 20%;
-                    background: #fff;
-                    text-align: center;
-                }
-        
-                p {
-                    margin-top: 1.5rem;
-                }
-            </style>
-        </head>
-        <body><div class="wrap"><h1>' . $code . ' | ' . $data . '</h1></div></body></html>';
+        ob_clean();
+
+        echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>' . $code . ' | ' . $data . '</title><style>body {height: 100%;background: #fff;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;color: #4e7d50;font-weight: 300;}h1 {font-weight: 400;margin-top: 0;margin-bottom: 0;color: #4e7d50;}.wrap {margin-top: 20%;background: #fff;text-align: center;}p {margin-top: 1.5rem;}</style></head><body><div class="wrap"><h1>' . $code . ' | ' . $data . '</h1></div></body></html>';
 
         die();
     }
@@ -392,7 +369,7 @@ if (!function_exists('abort')) {
 
 if (!function_exists('gate_denies')) {
     /**
-     * abort and display error message
+     * checks the user permission
      * 
      */
     function gate_denies($access = '', $message = '')
@@ -419,7 +396,7 @@ if (!function_exists('gate_denies')) {
 
 if (!function_exists('abort_if')) {
     /**
-     * abort and display error message
+     *abort if the gate denies
      * 
      */
     function abort_if($denies = 0, $message = '')
@@ -542,6 +519,26 @@ function checkHash($value, $hashedValue)
 function fortified()
 {
     return file_exists('vendor/sprnva/fortify');
+}
+
+/**
+ * get the app root directory
+ * 
+ * @return string
+ */
+function basepath()
+{
+    return $_SERVER['DOCUMENT_ROOT'] . App::get('base_url') . "/";
+}
+
+/**
+ * get the app vendor directory
+ * 
+ * @return string
+ */
+function vendorpath()
+{
+    return $_SERVER['DOCUMENT_ROOT'] . App::get('base_url') . '/vendor/';
 }
 
 // add additional helper functions from the users

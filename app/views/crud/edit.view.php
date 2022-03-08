@@ -3,7 +3,7 @@
 
 <table class="table table-bordered">
     <tr>
-        <th>ID</th>
+        <th style="width: 20%;">ID</th>
         <td><?= $data['id'] ?></td>
     </tr>
     <tr>

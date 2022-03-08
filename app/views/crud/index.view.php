@@ -8,10 +8,10 @@
 <br><br>
 <button class="btn btn-md btn-primary" onclick="add()">ADD</button>
 <br><br>
-<table class="table table-striped table-bordered">
+<table class="table table-bordered">
     <tr>
-        <th></th>
-        <th>ID</th>
+        <th style="width: 10%;"></th>
+        <th class="text-center" style="width: 2%;">ID</th>
         <th>TITLE</th>
         <th>DESCRIPTION</th>
     </tr>
@@ -28,7 +28,7 @@
                     delete
                 </a>
             </td>
-            <td><?= $data['id'] ?></td>
+            <td class="text-center"><?= $data['id'] ?></td>
             <td><?= $data['title'] ?></td>
             <td><?= $data['description'] ?></td>
         </tr>

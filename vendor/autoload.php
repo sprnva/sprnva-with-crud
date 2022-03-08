@@ -47,6 +47,11 @@ spl_autoload_register(function ($class) {
         'PHPMailer\\PHPMailer\\POP3' => $vendorDir . '/sprnva/framework/src/Email/POP3.php',
         'PHPMailer\\PHPMailer\\SMTP' => $vendorDir . '/sprnva/framework/src/Email/SMTP.php',
         'App\\Controllers\\MigrationController' => $vendorDir . '/sprnva/framework/src/Database/Migration/controller/Migration/MigrationController.php',
+        'App\\Core\\Storage' => $vendorDir . '/sprnva/framework/src/Storage/Storage.php',
+        'App\\Core\\StorageInterface' => $vendorDir . '/sprnva/framework/src/Storage/StorageInterface.php',
+        'App\\Core\\Storage\\Exception\\StorageException' => $vendorDir . '/sprnva/framework/src/Storage/Exception/StorageException.php',
+        'App\\Core\\Kernel' => $vendorDir . '/sprnva/framework/src/Kernel/ErrorKernel.php',
+        'App\\Core\\Blast' => $vendorDir . '/sprnva/framework/src/Blast/Blast.php',
     ], $userClasses);
     if (array_key_exists($class, $classes)) {
         require_once $classes[$class];
