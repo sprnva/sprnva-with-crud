@@ -26,7 +26,7 @@ Request::csrf_token();
  */
 function appversion()
 {
-    return "1.4.10";
+    return "1.4.19";
 }
 
 /**
@@ -357,11 +357,12 @@ if (!function_exists('abort')) {
      */
     function abort($code, $message = '')
     {
-        $data = ($message == "") ? error_page($code) : $message;
+        $data = ($message == "") ? error_page_code($code) : $message;
 
         ob_clean();
 
-        echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>' . $code . ' | ' . $data . '</title><style>body {height: 100%;background: #fff;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;color: #4e7d50;font-weight: 300;}h1 {font-weight: 400;margin-top: 0;margin-bottom: 0;color: #4e7d50;}.wrap {margin-top: 20%;background: #fff;text-align: center;}p {margin-top: 1.5rem;}</style></head><body><div class="wrap"><h1>' . $code . ' | ' . $data . '</h1></div></body></html>';
+        echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>' . $code . ' | ' . $data . '</title><style>body {height: 100%;background: #fff;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;color: #4e7d50;font-weight: 300;}h1 {font-weight: 400;margin-top: 0;margin-bottom: 0;color: #4e7d50;}.wrap {margin-top: 20%;background: #fff;text-align: center;}p {margin-top: 1.5rem;}</style>
+        </head><body><div class="wrap"><h1>' . $code . ' | ' . $data . '</h1></div></body></html>';
 
         die();
     }
@@ -369,7 +370,7 @@ if (!function_exists('abort')) {
 
 if (!function_exists('gate_denies')) {
     /**
-     * checks the user permission
+     * abort and display error message
      * 
      */
     function gate_denies($access = '', $message = '')
@@ -385,10 +386,12 @@ if (!function_exists('gate_denies')) {
                 }
 
                 if (!in_array($access, $permissionsList)) {
-                    abort(403, $message);
+                    return true;
+                } else {
+                    return false;
                 }
             } else {
-                abort(403, $message);
+                return true;
             }
         }
     }
@@ -396,93 +399,95 @@ if (!function_exists('gate_denies')) {
 
 if (!function_exists('abort_if')) {
     /**
-     *abort if the gate denies
+     * abort and display error message
      * 
      */
-    function abort_if($denies = 0, $message = '')
+    function abort_if($denies = false, $errorCode = '403')
     {
         if ($denies) {
-            abort(403, $message);
+            abort($errorCode, error_page_code($errorCode));
         }
     }
 }
 
-/**
- * error codes
- * 
- */
-function error_page($code)
-{
-    $codes = [
-        100 => 'Continue',
-        101 => 'Switching Protocols',
-        102 => 'Processing',
-        103 => 'Early Hints',
-        200 => 'OK',
-        201 => 'Created',
-        202 => 'Accepted',
-        203 => 'Non-Authoritative Information',
-        204 => 'No Content',
-        205 => 'Reset Content',
-        206 => 'Partial Content',
-        207 => 'Multi-Status',
-        208 => 'Already Reported',
-        226 => 'IM Used',
-        300 => 'Multiple Choices',
-        301 => 'Moved Permanently',
-        302 => 'Found',
-        303 => 'See Other',
-        304 => 'Not Modified',
-        305 => 'Use Proxy',
-        306 => 'Switch Proxy',
-        307 => 'Temporary Redirect',
-        308 => 'Permanent Redirect',
-        400 => 'Bad Request',
-        401 => 'Unauthorized',
-        402 => 'Payment Required',
-        403 => 'Forbidden',
-        404 => 'Not Found',
-        405 => 'Method Not Allowed',
-        406 => 'Not Acceptable',
-        407 => 'Proxy Authentication Required',
-        408 => 'Request Timeout',
-        409 => 'Conflict',
-        410 => 'Gone',
-        411 => 'Length Required',
-        412 => 'Precondition Failed',
-        413 => 'Request Entity Too Large',
-        414 => 'Request-URI Too Long',
-        415 => 'Unsupported Media Type',
-        416 => 'Requested Range Not Satisfiable',
-        417 => 'Expectation Failed',
-        418 => "I'm a teapot",
-        421 => 'Misdirected Request',
-        422 => 'Unprocessable Entity',
-        423 => 'Locked',
-        424 => 'Failed Dependency',
-        425 => 'Too Early',
-        426 => 'Upgrade Required',
-        428 => 'Precondition Required',
-        429 => 'Too Many Requests',
-        431 => 'Request Header Fields Too Large',
-        451 => 'Unavailable For Legal Reasons',
-        499 => 'Client Closed Request',
-        500 => 'Internal Server Error',
-        501 => 'Not Implemented',
-        502 => 'Bad Gateway',
-        503 => 'Service Unavailable',
-        504 => 'Gateway Timeout',
-        505 => 'HTTP Version Not Supported',
-        506 => 'Variant Also Negotiates',
-        507 => 'Insufficient Storage',
-        508 => 'Loop Detected',
-        510 => 'Not Extended',
-        511 => 'Network Authentication Required',
-        599 => 'Network Connect Timeout Error',
-    ];
+if (!function_exists('error_page_code')) {
+    /**
+     * error codes
+     * 
+     */
+    function error_page_code($code)
+    {
+        $codes = [
+            100 => 'Continue',
+            101 => 'Switching Protocols',
+            102 => 'Processing',
+            103 => 'Early Hints',
+            200 => 'OK',
+            201 => 'Created',
+            202 => 'Accepted',
+            203 => 'Non-Authoritative Information',
+            204 => 'No Content',
+            205 => 'Reset Content',
+            206 => 'Partial Content',
+            207 => 'Multi-Status',
+            208 => 'Already Reported',
+            226 => 'IM Used',
+            300 => 'Multiple Choices',
+            301 => 'Moved Permanently',
+            302 => 'Found',
+            303 => 'See Other',
+            304 => 'Not Modified',
+            305 => 'Use Proxy',
+            306 => 'Switch Proxy',
+            307 => 'Temporary Redirect',
+            308 => 'Permanent Redirect',
+            400 => 'Bad Request',
+            401 => 'Unauthorized',
+            402 => 'Payment Required',
+            403 => 'Forbidden',
+            404 => 'Not Found',
+            405 => 'Method Not Allowed',
+            406 => 'Not Acceptable',
+            407 => 'Proxy Authentication Required',
+            408 => 'Request Timeout',
+            409 => 'Conflict',
+            410 => 'Gone',
+            411 => 'Length Required',
+            412 => 'Precondition Failed',
+            413 => 'Request Entity Too Large',
+            414 => 'Request-URI Too Long',
+            415 => 'Unsupported Media Type',
+            416 => 'Requested Range Not Satisfiable',
+            417 => 'Expectation Failed',
+            418 => "I'm a teapot",
+            421 => 'Misdirected Request',
+            422 => 'Unprocessable Entity',
+            423 => 'Locked',
+            424 => 'Failed Dependency',
+            425 => 'Too Early',
+            426 => 'Upgrade Required',
+            428 => 'Precondition Required',
+            429 => 'Too Many Requests',
+            431 => 'Request Header Fields Too Large',
+            451 => 'Unavailable For Legal Reasons',
+            499 => 'Client Closed Request',
+            500 => 'Internal Server Error',
+            501 => 'Not Implemented',
+            502 => 'Bad Gateway',
+            503 => 'Service Unavailable',
+            504 => 'Gateway Timeout',
+            505 => 'HTTP Version Not Supported',
+            506 => 'Variant Also Negotiates',
+            507 => 'Insufficient Storage',
+            508 => 'Loop Detected',
+            510 => 'Not Extended',
+            511 => 'Network Authentication Required',
+            599 => 'Network Connect Timeout Error',
+        ];
 
-    if (array_key_exists($code, $codes)) {
-        return $codes[$code];
+        if (array_key_exists($code, $codes)) {
+            return $codes[$code];
+        }
     }
 }
 
