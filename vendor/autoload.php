@@ -52,6 +52,9 @@ spl_autoload_register(function ($class) {
         'App\\Core\\Storage\\Exception\\StorageException' => $vendorDir . '/sprnva/framework/src/Storage/Exception/StorageException.php',
         'App\\Core\\Kernel' => $vendorDir . '/sprnva/framework/src/Kernel/ErrorKernel.php',
         'App\\Core\\Blast' => $vendorDir . '/sprnva/framework/src/Blast/Blast.php',
+        'App\\Core\\DB\\DB' => $vendorDir . '/sprnva/framework/src/Database/DB/DB.php',
+        'App\\Core\\DB\\DBInterface' => $vendorDir . '/sprnva/framework/src/Database/DB/DBInterface.php',
+        'App\\Core\\DB\\Cache' => $vendorDir . '/sprnva/framework/src/Database/DB/Cache.php',
     ], $userClasses);
     if (array_key_exists($class, $classes)) {
         require_once $classes[$class];

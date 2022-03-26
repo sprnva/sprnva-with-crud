@@ -26,7 +26,7 @@ Request::csrf_token();
  */
 function appversion()
 {
-    return "1.4.19";
+    return "1.4.22";
 }
 
 /**
@@ -347,6 +347,17 @@ if (!function_exists('db')) {
     function DB()
     {
         return App::get('database');
+    }
+}
+
+if (!function_exists('database')) {
+    /**
+     * database connection instance
+     * 
+     */
+    function database()
+    {
+        return App::get('db');
     }
 }
 
